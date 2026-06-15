@@ -50,119 +50,119 @@ struct __ScopedScratchpad
 };
 
 struct bit
-	{
-		bit(bool v = false) : charValue(v)
-		{
-		}
+{
+    bit(bool v = false) : charValue(v)
+    {
+    }
 
-		operator bool() const
-		{
-			return !!charValue;
-		}
+    operator bool() const
+    {
+        return !!charValue;
+    }
 
-		char charValue;
-	};
+    char charValue;
+};
 
-	typedef signed char sint8;
-	typedef unsigned char uint8;
-	typedef signed short sint16;
-	typedef unsigned short uint16;
-	typedef signed int sint32;
-	typedef unsigned int uint32;
-	typedef signed long long sint64;
-	typedef unsigned long long uint64;
+typedef signed char sint8;
+typedef unsigned char uint8;
+typedef signed short sint16;
+typedef unsigned short uint16;
+typedef signed int sint32;
+typedef unsigned int uint32;
+typedef signed long long sint64;
+typedef unsigned long long uint64;
 
 namespace QPI
 {
     using uint64 = ::uint64;
 }
 
-	// Error codes for inter-contract calls (used when calling other contracts fails)
-	// These are returned to the calling contract so it can handle the error
-	enum InterContractCallError : uint8
-	{
-		NoCallError = 0,
-		CallErrorContractInErrorState = 1,      // Called contract is already in error state
-		CallErrorInsufficientFees = 2,          // Called contract has no execution fee reserve
-		CallErrorAllocationFailed = 3,          // Failed to allocate context on stack
-		CallErrorContractInactive = 4,			// Called contract has been inactive
-	};
+// Error codes for inter-contract calls (used when calling other contracts fails)
+// These are returned to the calling contract so it can handle the error
+enum InterContractCallError : uint8
+{
+    NoCallError = 0,
+    CallErrorContractInErrorState = 1,      // Called contract is already in error state
+    CallErrorInsufficientFees = 2,          // Called contract has no execution fee reserve
+    CallErrorAllocationFailed = 3,          // Failed to allocate context on stack
+    CallErrorContractInactive = 4,			// Called contract has been inactive
+};
 
-	typedef m256i id;
+typedef m256i id;
 
 #define STATIC_ASSERT(condition, identifier) static_assert(condition, #identifier);
 
 #define NULL_ID id::zero()
 
-	constexpr sint64 NULL_INDEX = -1;
+constexpr sint64 NULL_INDEX = -1;
 
-	constexpr sint64 INVALID_AMOUNT = 0x8000000000000000;
+constexpr sint64 INVALID_AMOUNT = 0x8000000000000000;
 
-	// Characters for building strings (for example in constructor of id / m256i)
-	namespace Ch
-	{
-		enum : char
-		{
-			null = 0,
-			space = ' ', slash = '/', backslash = '\\', dot = '.', comma = ',', colon = ':', semicolon = ';',
-			underscore = '_', minus = '-', plus = '+', star = '*', dollar = '$', question_mark = '?', exclamation_mark = '!',
-			a = 'a', b = 'b', c = 'c', d = 'd', e = 'e', f = 'f', g = 'g', h = 'h', i = 'i', j = 'j', k = 'k', l = 'l', m = 'm',
-			n = 'n', o = 'o', p = 'p', q = 'q', r = 'r', s = 's', t = 't', u = 'u', v = 'v', w = 'w', x = 'x', y = 'y', z = 'z',
-			A = 'A', B = 'B', C = 'C', D = 'D', E = 'E', F = 'F', G = 'G', H = 'H', I = 'I', J = 'J', K = 'K', L = 'L', M = 'M',
-			N = 'N', O = 'O', P = 'P', Q = 'Q', R = 'R', S = 'S', T = 'T', U = 'U', V = 'V', W = 'W', X = 'X', Y = 'Y', Z = 'Z',
-			_0 = '0', _1 = '1', _2 = '2', _3 = '3', _4 = '4', _5 = '5', _6 = '6', _7 = '7', _8 = '8', _9 = '9',
-		};
-	}
+// Characters for building strings (for example in constructor of id / m256i)
+namespace Ch
+{
+    enum : char
+    {
+        null = 0,
+        space = ' ', slash = '/', backslash = '\\', dot = '.', comma = ',', colon = ':', semicolon = ';',
+        underscore = '_', minus = '-', plus = '+', star = '*', dollar = '$', question_mark = '?', exclamation_mark = '!',
+        a = 'a', b = 'b', c = 'c', d = 'd', e = 'e', f = 'f', g = 'g', h = 'h', i = 'i', j = 'j', k = 'k', l = 'l', m = 'm',
+        n = 'n', o = 'o', p = 'p', q = 'q', r = 'r', s = 's', t = 't', u = 'u', v = 'v', w = 'w', x = 'x', y = 'y', z = 'z',
+        A = 'A', B = 'B', C = 'C', D = 'D', E = 'E', F = 'F', G = 'G', H = 'H', I = 'I', J = 'J', K = 'K', L = 'L', M = 'M',
+        N = 'N', O = 'O', P = 'P', Q = 'Q', R = 'R', S = 'S', T = 'T', U = 'U', V = 'V', W = 'W', X = 'X', Y = 'Y', Z = 'Z',
+        _0 = '0', _1 = '1', _2 = '2', _3 = '3', _4 = '4', _5 = '5', _6 = '6', _7 = '7', _8 = '8', _9 = '9',
+    };
+}
 
-	// Wrapper around a contract's entire state struct.
-	// sizeof(ContractState<T, contractIndex>) == sizeof(T), standard layout, zero-init compatible.
-	// Use get() for reads, mut() for writes (marks dirty).
-	template <typename T, unsigned int contractIndex>
-	struct ContractState {
-		static constexpr unsigned int __contract_index = contractIndex;
-		const T& get() const { return _data; }
-		T& mut() { ::__markContractStateDirty(contractIndex); return _data; }
-	private:
-		T _data;
-	};
+// Wrapper around a contract's entire state struct.
+// sizeof(ContractState<T, contractIndex>) == sizeof(T), standard layout, zero-init compatible.
+// Use get() for reads, mut() for writes (marks dirty).
+template <typename T, unsigned int contractIndex>
+struct ContractState {
+    static constexpr unsigned int __contract_index = contractIndex;
+    const T& get() const { return _data; }
+    T& mut() { ::__markContractStateDirty(contractIndex); return _data; }
+private:
+    T _data;
+};
 
-	// Letters for defining identity with ID function
-	constexpr long long _A = 0;
-	constexpr long long _B = 1;
-	constexpr long long _C = 2;
-	constexpr long long _D = 3;
-	constexpr long long _E = 4;
-	constexpr long long _F = 5;
-	constexpr long long _G = 6;
-	constexpr long long _H = 7;
-	constexpr long long _I = 8;
-	constexpr long long _J = 9;
-	constexpr long long _K = 10;
-	constexpr long long _L = 11;
-	constexpr long long _M = 12;
-	constexpr long long _N = 13;
-	constexpr long long _O = 14;
-	constexpr long long _P = 15;
-	constexpr long long _Q = 16;
-	constexpr long long _R = 17;
-	constexpr long long _S = 18;
-	constexpr long long _T = 19;
-	constexpr long long _U = 20;
-	constexpr long long _V = 21;
-	constexpr long long _W = 22;
-	constexpr long long _X = 23;
-	constexpr long long _Y = 24;
-	constexpr long long _Z = 25;
+// Letters for defining identity with ID function
+constexpr long long _A = 0;
+constexpr long long _B = 1;
+constexpr long long _C = 2;
+constexpr long long _D = 3;
+constexpr long long _E = 4;
+constexpr long long _F = 5;
+constexpr long long _G = 6;
+constexpr long long _H = 7;
+constexpr long long _I = 8;
+constexpr long long _J = 9;
+constexpr long long _K = 10;
+constexpr long long _L = 11;
+constexpr long long _M = 12;
+constexpr long long _N = 13;
+constexpr long long _O = 14;
+constexpr long long _P = 15;
+constexpr long long _Q = 16;
+constexpr long long _R = 17;
+constexpr long long _S = 18;
+constexpr long long _T = 19;
+constexpr long long _U = 20;
+constexpr long long _V = 21;
+constexpr long long _W = 22;
+constexpr long long _X = 23;
+constexpr long long _Y = 24;
+constexpr long long _Z = 25;
 
-	inline id ID(long long _00, long long _01, long long _02, long long _03, long long _04, long long _05, long long _06, long long _07, long long _08, long long _09,
-		long long _10, long long _11, long long _12, long long _13, long long _14, long long _15, long long _16, long long _17, long long _18, long long _19,
-		long long _20, long long _21, long long _22, long long _23, long long _24, long long _25, long long _26, long long _27, long long _28, long long _29,
-		long long _30, long long _31, long long _32, long long _33, long long _34, long long _35, long long _36, long long _37, long long _38, long long _39,
-		long long _40, long long _41, long long _42, long long _43, long long _44, long long _45, long long _46, long long _47, long long _48, long long _49,
-		long long _50, long long _51, long long _52, long long _53, long long _54, long long _55)
-	{ 
-		return _mm256_set_epi64x(((((((((((((((uint64)_55) * 26 + _54) * 26 + _53) * 26 + _52) * 26 + _51) * 26 + _50) * 26 + _49) * 26 + _48) * 26 + _47) * 26 + _46) * 26 + _45) * 26 + _44) * 26 + _43) * 26 + _42, ((((((((((((((uint64)_41) * 26 + _40) * 26 + _39) * 26 + _38) * 26 + _37) * 26 + _36) * 26 + _35) * 26 + _34) * 26 + _33) * 26 + _32) * 26 + _31) * 26 + _30) * 26 + _29) * 26 + _28, ((((((((((((((uint64)_27) * 26 + _26) * 26 + _25) * 26 + _24) * 26 + _23) * 26 + _22) * 26 + _21) * 26 + _20) * 26 + _19) * 26 + _18) * 26 + _17) * 26 + _16) * 26 + _15) * 26 + _14, ((((((((((((((uint64)_13) * 26 + _12) * 26 + _11) * 26 + _10) * 26 + _09) * 26 + _08) * 26 + _07) * 26 + _06) * 26 + _05) * 26 + _04) * 26 + _03) * 26 + _02) * 26 + _01) * 26 + _00); 
-	}
+inline id ID(long long _00, long long _01, long long _02, long long _03, long long _04, long long _05, long long _06, long long _07, long long _08, long long _09,
+    long long _10, long long _11, long long _12, long long _13, long long _14, long long _15, long long _16, long long _17, long long _18, long long _19,
+    long long _20, long long _21, long long _22, long long _23, long long _24, long long _25, long long _26, long long _27, long long _28, long long _29,
+    long long _30, long long _31, long long _32, long long _33, long long _34, long long _35, long long _36, long long _37, long long _38, long long _39,
+    long long _40, long long _41, long long _42, long long _43, long long _44, long long _45, long long _46, long long _47, long long _48, long long _49,
+    long long _50, long long _51, long long _52, long long _53, long long _54, long long _55)
+{
+    return _mm256_set_epi64x(((((((((((((((uint64)_55) * 26 + _54) * 26 + _53) * 26 + _52) * 26 + _51) * 26 + _50) * 26 + _49) * 26 + _48) * 26 + _47) * 26 + _46) * 26 + _45) * 26 + _44) * 26 + _43) * 26 + _42, ((((((((((((((uint64)_41) * 26 + _40) * 26 + _39) * 26 + _38) * 26 + _37) * 26 + _36) * 26 + _35) * 26 + _34) * 26 + _33) * 26 + _32) * 26 + _31) * 26 + _30) * 26 + _29) * 26 + _28, ((((((((((((((uint64)_27) * 26 + _26) * 26 + _25) * 26 + _24) * 26 + _23) * 26 + _22) * 26 + _21) * 26 + _20) * 26 + _19) * 26 + _18) * 26 + _17) * 26 + _16) * 26 + _15) * 26 + _14, ((((((((((((((uint64)_13) * 26 + _12) * 26 + _11) * 26 + _10) * 26 + _09) * 26 + _08) * 26 + _07) * 26 + _06) * 26 + _05) * 26 + _04) * 26 + _03) * 26 + _02) * 26 + _01) * 26 + _00);
+}
 
 #define NUMBER_OF_COMPUTORS 676
 #define QUORUM (NUMBER_OF_COMPUTORS * 2 / 3 + 1)
@@ -1411,90 +1411,883 @@ sint64 Collection<T, L>::tailIndex(const id& pov, sint64 minPriority) const
     return _tailIndex(povIndex, minPriority);
 }
 
-// FIXED CONSTANTS (old on-chain layout)
-constexpr uint64 QSWAP_OLD_INITIAL_MAX_POOL = 16384;
-constexpr uint64 QSWAP_OLD_MAX_POOL = QSWAP_OLD_INITIAL_MAX_POOL * X_MULTIPLIER;
-
-// FIXED CONSTANTS (new contract layout)
-constexpr uint64 QSWAP_NEW_INITIAL_MAX_POOL = 8192;
-constexpr uint64 QSWAP_NEW_MAX_POOL = QSWAP_NEW_INITIAL_MAX_POOL * X_MULTIPLIER;
-
-constexpr uint64 QSWAP_MAX_USER_PER_POOL = 256;
-constexpr sint64 QSWAP_MIN_LIQUIDITY = 1000;
-constexpr uint32 QSWAP_SWAP_FEE_BASE = 10000;
-constexpr uint32 QSWAP_FEE_BASE_100 = 100;
-
-struct uint128
+// Hash function class to be used with the hash map.
+template <typename KeyT> class HashFunction
 {
-    uint64 low = 0;
-    uint64 high = 0;
+public:
+    static uint64 hash(const KeyT& key);
 };
 
-// On-disk layout before migration (no LP fee accumulator on pools).
-struct OldPoolBasicState
+template <typename KeyT>
+uint64 HashFunction<KeyT>::hash(const KeyT& key)
 {
-    id poolID;
-    sint64 reservedQuAmount;
-    sint64 reservedAssetAmount;
-    sint64 totalLiquidity;
+    uint64 ret;
+    KangarooTwelve(&key, sizeof(KeyT), &ret, 8);
+    return ret;
+}
+
+// For performance reasons, we use the first 8 bytes as hash for m256i/id types.
+template <>
+inline uint64 HashFunction<m256i>::hash(const m256i& key)
+{
+    return key.u64._0;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc = HashFunction<KeyT>>
+class HashMap
+{
+private:
+    static_assert(L && !(L& (L - 1)),
+        "The capacity of the hash map must be 2^N."
+        );
+    static constexpr sint64 _nEncodedFlags = L > 32 ? 32 : L;
+
+    // Hash map of (key, value) pairs
+    struct Element
+    {
+        KeyT key;
+        ValueT value;
+    } _elements[L];
+
+    // 2 bits per element of _elements: 0b00 = not occupied; 0b01 = occupied; 0b10 = occupied but marked for removal; 0b11 is unused
+    // The state "occupied but marked for removal" is needed for finding the index of a key in the hash map. Setting an entry to
+    // "not occupied" in remove() would potentially undo a collision, create a gap, and mess up the entry search.
+    uint64 _occupationFlags[(L * 2 + 63) / 64];
+
+    uint64 _population;
+    uint64 _markRemovalCounter;
+
+    // Read and encode 32 POV occupation flags, return a 64bits number presents 32 occupation flags
+    uint64 _getEncodedOccupationFlags(const uint64* occupationFlags, const sint64 elementIndex) const;
+
+public:
+    HashMap()
+    {
+        reset();
+    }
+
+    // Return maximum number of elements that may be stored.
+    static constexpr uint64 capacity()
+    {
+        return L;
+    }
+
+    // Return overall number of elements.
+    inline uint64 population() const;
+
+    // Return boolean indicating whether key is contained in the hash map.
+    bool contains(const KeyT& key) const;
+
+    // Return boolean indicating whether key is contained in the hash map.
+    // If key is contained, write the associated value into the provided ValueT&. 
+    bool get(const KeyT& key, ValueT& value) const;
+
+    // Return index of element with key in hash map _elements, or NULL_INDEX if not found.
+    sint64 getElementIndex(const KeyT& key) const;
+
+    // Return if slot at elementIndex is empty (not occupied by an element). If false, key() is valid.
+    inline bool isEmptySlot(sint64 elementIndex) const;
+
+    // Return index of the next occupied element following the index passed as an argument. Pass NULL_INDEX to get
+    // the first occupied element. Returns NULL_INDEX if there are no more occupied elements.
+    inline sint64 nextElementIndex(sint64 elementIndex) const;
+
+    // Return key at elementIndex. Invalid if isEmptySlot(elementIndex).
+    inline const KeyT& key(sint64 elementIndex) const;
+
+    // Return value at elementIndex.
+    inline const ValueT& value(sint64 elementIndex) const;
+
+    // Add element (key, value) to the hash map, return elementIndex of new element.
+    // If key already exists in the hash map, the old value will be overwritten.
+    // If the hash map is full, return NULL_INDEX.
+    sint64 set(const KeyT& key, const ValueT& value);
+
+    // Mark element for removal.
+    void removeByIndex(sint64 elementIdx);
+
+    // Mark element for removal if key is contained in the hash map, 
+    // returning the elementIndex (or NULL_INDEX if the hash map does not contain the key).
+    sint64 removeByKey(const KeyT& key);
+
+    // Check if cleanup is needed based on the removal threshold, without modifying the container.
+    bool needsCleanup(uint64 removalThresholdPercent = 50) const;
+
+    // Call cleanup() if it makes sense. The content of this object may be reordered, so prior indices are invalidated.
+    void cleanupIfNeeded(uint64 removalThresholdPercent = 50);
+
+    // Remove all elements marked for removal. This is an expensive operation, but it improves lookup performance
+    // if remove has been called often. Content is reordered, so prior indices are invalidated.
+    void cleanup();
+
+    // Replace value for *existing* key, do nothing otherwise.
+    // - The key exists: replace its value. Return true.
+    // - The key is not contained in the hash map: no action is taken. Return false.
+    bool replace(const KeyT& key, const ValueT& newValue);
+
+    // Reinitialize as empty hash map.
+    void reset();
 };
 
-struct PoolBasicState
+//////////////////////////////////////////////////////////////////////////////
+    // HashMap template class
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+uint64 HashMap<KeyT, ValueT, L, HashFunc>::_getEncodedOccupationFlags(const uint64* occupationFlags, const sint64 elementIndex) const
 {
-    id poolID;
-    sint64 reservedQuAmount;
-    sint64 reservedAssetAmount;
-    sint64 totalLiquidity;
-    uint128 accFeePerLPX64;
+    const sint64 offset = (elementIndex & 31) << 1;
+    uint64 flags = occupationFlags[elementIndex >> 5] >> offset;
+    if (offset > 0)
+    {
+        flags |= occupationFlags[((elementIndex + 32) & (L - 1)) >> 5] << (2 * _nEncodedFlags - offset);
+    }
+    return flags;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+bool HashMap<KeyT, ValueT, L, HashFunc>::contains(const KeyT& key) const
+{
+    return getElementIndex(key) != NULL_INDEX;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+bool HashMap<KeyT, ValueT, L, HashFunc>::get(const KeyT& key, ValueT& value) const
+{
+    sint64 elementIndex = getElementIndex(key);
+    if (elementIndex != NULL_INDEX)
+    {
+        value = _elements[elementIndex].value;
+        return true;
+    }
+    return false;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+sint64 HashMap<KeyT, ValueT, L, HashFunc>::getElementIndex(const KeyT& key) const
+{
+    sint64 index = HashFunc::hash(key) & (L - 1);
+    for (sint64 counter = 0; counter < L; counter += 32)
+    {
+        uint64 flags = _getEncodedOccupationFlags(_occupationFlags, index);
+        for (auto i = 0; i < _nEncodedFlags; i++, flags >>= 2)
+        {
+            switch (flags & 3ULL)
+            {
+            case 0:
+                return NULL_INDEX;
+            case 1:
+                if (_elements[index].key == key)
+                {
+                    return index;
+                }
+                break;
+            }
+            index = (index + 1) & (L - 1);
+        }
+    }
+    return NULL_INDEX;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+inline const KeyT& HashMap<KeyT, ValueT, L, HashFunc>::key(sint64 elementIndex) const
+{
+    return _elements[elementIndex & (L - 1)].key;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+inline const ValueT& HashMap<KeyT, ValueT, L, HashFunc>::value(sint64 elementIndex) const
+{
+    return _elements[elementIndex & (L - 1)].value;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+inline uint64 HashMap<KeyT, ValueT, L, HashFunc>::population() const
+{
+    return _population;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+sint64 HashMap<KeyT, ValueT, L, HashFunc>::set(const KeyT& key, const ValueT& value)
+{
+    if (_population < capacity())
+    {
+        // search in hash map
+        sint64 markedForRemovalIndexForReuse = NULL_INDEX;
+        sint64 index = HashFunc::hash(key) & (L - 1);
+        for (sint64 counter = 0; counter < L; counter += 32)
+        {
+            uint64 flags = _getEncodedOccupationFlags(_occupationFlags, index);
+            for (auto i = 0; i < _nEncodedFlags; i++, flags >>= 2)
+            {
+                switch (flags & 3ULL)
+                {
+                case 0:
+                    // empty entry -> key isn't in set yet
+                    // If we have already seen an entry marked for removal, reuse this slot because it is closer to the hash index
+                    if (markedForRemovalIndexForReuse != NULL_INDEX)
+                        goto reuse_slot;
+                    // ... otherwise put element and mark as occupied
+                    _occupationFlags[index >> 5] |= (1ULL << ((index & 31) << 1));
+                    _elements[index].key = key;
+                    _elements[index].value = value;
+                    _population++;
+                    return index;
+                case 1:
+                    if (_elements[index].key == key)
+                    {
+                        // found key -> insert new value
+                        _elements[index].value = value;
+                        return index;
+                    }
+                    break;
+                case 2:
+                    // marked for removal -> reuse slot (first slot we see) later if we are sure that key isn't in the map
+                    if (markedForRemovalIndexForReuse == NULL_INDEX)
+                        markedForRemovalIndexForReuse = index;
+                    break;
+                }
+                index = (index + 1) & (L - 1);
+            }
+        }
+
+        if (markedForRemovalIndexForReuse != NULL_INDEX)
+        {
+        reuse_slot:
+            // Reuse slot marked for removal: put key here and set flags from 2 to 1.
+            // But don't decrement _markRemovalCounter, because it is used to check if cleanup() is needed.
+            // Without cleanup, we don't get new unoccupied slots and at least lookup of keys that aren't contained in the map
+            // stays slow.
+            index = markedForRemovalIndexForReuse;
+            _occupationFlags[index >> 5] ^= (3ULL << ((index & 31) << 1));
+            _elements[index].key = key;
+            _elements[index].value = value;
+            _population++;
+            return index;
+        }
+    }
+    else // _population == capacity()
+    {
+        // Check if key exists for value replacement.
+        sint64 index = getElementIndex(key);
+        if (index != NULL_INDEX)
+        {
+            _elements[index].value = value;
+            return index;
+        }
+    }
+    return NULL_INDEX;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+bool HashMap<KeyT, ValueT, L, HashFunc>::isEmptySlot(sint64 elementIndex) const
+{
+    elementIndex &= (L - 1);
+    uint64 flags = _getEncodedOccupationFlags(_occupationFlags, elementIndex);
+    return ((flags & 3ULL) != 1);
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+sint64 HashMap<KeyT, ValueT, L, HashFunc>::nextElementIndex(sint64 elementIndex) const
+{
+    if (!_population)
+        return NULL_INDEX;
+
+    if (elementIndex < 0)
+        elementIndex = 0;
+    else
+        ++elementIndex;
+
+    // search for next occupied element until end of hash map array
+    constexpr uint64 flagsLength = math_lib::max(L >> 5, 1ull);
+    sint64 flagsIdx = elementIndex >> 5;
+    sint64 offset = elementIndex & 31ll;
+    uint64 flags = _occupationFlags[flagsIdx] >> (2 * offset);
+    while (flagsIdx < flagsLength)
+    {
+        for (sint64 i = offset; i < _nEncodedFlags; ++i, flags >>= 2)
+        {
+            if (!flags)
+            {
+                // no occupied entries in current flags
+                break;
+            }
+            if ((flags & 3ULL) == 1)
+            {
+                // found occupied entry
+                return (flagsIdx << 5) + i;
+            }
+        }
+
+        flags = _occupationFlags[++flagsIdx];
+        offset = 0;
+    }
+
+    return NULL_INDEX;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+void HashMap<KeyT, ValueT, L, HashFunc>::removeByIndex(sint64 elementIdx)
+{
+    elementIdx &= (L - 1);
+    uint64 flags = _getEncodedOccupationFlags(_occupationFlags, elementIdx);
+
+    if ((flags & 3ULL) == 1)
+    {
+        _population--;
+        _markRemovalCounter++;
+        _occupationFlags[elementIdx >> 5] ^= (3ULL << ((elementIdx & 31) << 1));
+
+        const bool CLEAR_UNUSED_ELEMENT = true;
+        if (CLEAR_UNUSED_ELEMENT)
+        {
+            setMem(&_elements[elementIdx], sizeof(Element), 0);
+        }
+    }
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+sint64 HashMap<KeyT, ValueT, L, HashFunc>::removeByKey(const KeyT& key)
+{
+    sint64 elementIndex = getElementIndex(key);
+    if (elementIndex == NULL_INDEX)
+    {
+        return NULL_INDEX;
+    }
+    else
+    {
+        removeByIndex(elementIndex);
+        return elementIndex;
+    }
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+bool HashMap<KeyT, ValueT, L, HashFunc>::needsCleanup(uint64 removalThresholdPercent) const
+{
+    return _markRemovalCounter > (removalThresholdPercent * L / 100);
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+void HashMap<KeyT, ValueT, L, HashFunc>::cleanupIfNeeded(uint64 removalThresholdPercent)
+{
+    if (_markRemovalCounter > (removalThresholdPercent * L / 100))
+    {
+        cleanup();
+    }
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+void HashMap<KeyT, ValueT, L, HashFunc>::cleanup()
+{
+    // _elements gets occupied over time with entries of type 3 which means they are marked for cleanup.
+    // Once cleanup is called it's necessary to remove all these type 3 entries by reconstructing a fresh hash map residing in scratchpad buffer.
+    // Cleanup() called for a hash map having only type 3 entries must give the result equal to reset() memory content wise.
+
+    // Quick check to cleanup
+    if (!_markRemovalCounter)
+    {
+        return;
+    }
+
+    // Speedup case of empty hash map but existed marked for removal elements
+    if (!population())
+    {
+        reset();
+        return;
+    }
+
+    // Init buffers
+    __ScopedScratchpad scratchpad(sizeof(_elements) + sizeof(_occupationFlags), /*initZero=*/true);
+    ASSERT(scratchpad.ptr);
+    auto* _elementsBuffer = reinterpret_cast<Element*>(scratchpad.ptr);
+    auto* _occupationFlagsBuffer = reinterpret_cast<uint64*>(_elementsBuffer + L);
+    auto* _stackBuffer = reinterpret_cast<sint64*>(
+        _occupationFlagsBuffer + sizeof(_occupationFlags) / sizeof(_occupationFlags[0]));
+    uint64 newPopulation = 0;
+
+    // Go through hash map. For each element that is occupied but not marked for removal, insert element in new hash map's buffers.
+    constexpr uint64 oldIndexGroupCount = (L >> 5) ? (L >> 5) : 1;
+    for (sint64 oldIndexGroup = 0; oldIndexGroup < oldIndexGroupCount; oldIndexGroup++)
+    {
+        const uint64 flags = _occupationFlags[oldIndexGroup];
+        uint64 maskBits = (0xAAAAAAAAAAAAAAAA & (flags << 1));
+        maskBits &= maskBits ^ (flags & 0xAAAAAAAAAAAAAAAA);
+        sint64 oldIndexOffset = _tzcnt_u64(maskBits) & 0xFE;
+        const sint64 oldIndexOffsetEnd = 64 - (_lzcnt_u64(maskBits) & 0xFE);
+        for (maskBits >>= oldIndexOffset;
+            oldIndexOffset < oldIndexOffsetEnd; oldIndexOffset += 2, maskBits >>= 2)
+        {
+            // Only add elements to new hash map that are occupied and not marked for removal
+            if (maskBits & 3ULL)
+            {
+                // find empty position in new hash map
+                const sint64 oldIndex = (oldIndexGroup << 5) + (oldIndexOffset >> 1);
+                sint64 newIndex = HashFunc::hash(_elements[oldIndex].key) & (L - 1);
+                for (sint64 counter = 0; counter < L; counter += 32)
+                {
+                    QPI::uint64 newFlags = _getEncodedOccupationFlags(_occupationFlagsBuffer, newIndex);
+                    for (sint64 i = 0; i < _nEncodedFlags; i++, newFlags >>= 2)
+                    {
+                        if ((newFlags & 3ULL) == 0)
+                        {
+                            newIndex = (newIndex + i) & (L - 1);
+                            goto foundEmptyPosition;
+                        }
+                    }
+                    newIndex = (newIndex + _nEncodedFlags) & (L - 1);
+                }
+#ifdef NO_UEFI
+                // should never be reached, because old and new map have same capacity (there should always be an empty slot)
+                goto cleanupBug;
+#endif
+
+            foundEmptyPosition:
+                // occupy empty hash map entry
+                _occupationFlagsBuffer[newIndex >> 5] |= (1ULL << ((newIndex & 31) << 1));
+                copyMem(&_elementsBuffer[newIndex], &_elements[oldIndex], sizeof(Element));
+
+                // check if we are done
+                newPopulation += 1;
+                if (newPopulation == _population)
+                {
+                    // all elements have been transferred -> overwrite old array with new array
+                    copyMem(_elements, _elementsBuffer, sizeof(_elements));
+                    copyMem(_occupationFlags, _occupationFlagsBuffer, sizeof(_occupationFlags));
+                    _markRemovalCounter = 0;
+                    return;
+                }
+            }
+        }
+    }
+
+#ifdef NO_UEFI
+    cleanupBug :
+    // don't expect here, certainly got error!!!
+    printf("ERROR: Something went wrong at cleanup!\n");
+#endif
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+bool HashMap<KeyT, ValueT, L, HashFunc>::replace(const KeyT& key, const ValueT& newValue)
+{
+    sint64 elementIndex = getElementIndex(key);
+    if (elementIndex != NULL_INDEX)
+    {
+        _elements[elementIndex].value = newValue;
+        return true;
+    }
+    return false;
+}
+
+template <typename KeyT, typename ValueT, uint64 L, typename HashFunc>
+void HashMap<KeyT, ValueT, L, HashFunc>::reset()
+{
+    setMem(this, sizeof(*this), 0);
+}
+
+// Hash set of keys of type KeyT and total element capacity L. Access time is approx. constant with
+    // population < 80% of L but gets close to linear with population > 90% of L.
+template <typename KeyT, uint64 L, typename HashFunc = HashFunction<KeyT>>
+class HashSet
+{
+private:
+    static_assert(L && !(L& (L - 1)),
+        "The capacity of the hash set must be 2^N."
+        );
+    static constexpr sint64 _nEncodedFlags = L > 32 ? 32 : L;
+
+    // Hash set
+    KeyT _keys[L];
+
+    // 2 bits per element of _elements: 0b00 = not occupied; 0b01 = occupied; 0b10 = occupied but marked for removal; 0b11 is unused
+    // The state "occupied but marked for removal" is needed for finding the index of a key in the hash map. Setting an entry to
+    // "not occupied" in remove() would potentially undo a collision, create a gap, and mess up the entry search.
+    uint64 _occupationFlags[(L * 2 + 63) / 64];
+
+    uint64 _population;
+    uint64 _markRemovalCounter;
+
+    // Read and encode 32 POV occupation flags, return a 64bits number presents 32 occupation flags
+    uint64 _getEncodedOccupationFlags(const uint64* occupationFlags, const sint64 elementIndex) const;
+
+public:
+    HashSet()
+    {
+        reset();
+    }
+
+    // Return maximum number of elements that may be stored.
+    static constexpr uint64 capacity()
+    {
+        return L;
+    }
+
+    // Return overall number of elements.
+    inline uint64 population() const;
+
+    // Return boolean indicating whether key is contained in the hash set.
+    bool contains(const KeyT& key) const;
+
+    // Return index of element with key in hash set _keys, or NULL_INDEX if not found.
+    sint64 getElementIndex(const KeyT& key) const;
+
+    // Return if slot at elementIndex is empty (not occupied by an element). If false, key() is valid.
+    inline bool isEmptySlot(sint64 elementIndex) const;
+
+    // Return index of the next occupied element following the index passed as an argument. Pass NULL_INDEX to get
+    // the first occupied element. Returns NULL_INDEX if there are no more occupied elements.
+    inline sint64 nextElementIndex(sint64 elementIndex) const;
+
+    // Return key at elementIndex. Invalid if isEmptySlot(elementIndex).
+    inline KeyT key(sint64 elementIndex) const;
+
+    // Add key to the hash set, return elementIndex of new element.
+    // If key already exists in the hash set, this does nothing.
+    // If the hash map is full, return NULL_INDEX.
+    sint64 add(const KeyT& key);
+
+    // Mark element for removal.
+    void removeByIndex(sint64 elementIdx);
+
+    // Mark element for removal if key is contained in the hash set, 
+    // returning the elementIndex (or NULL_INDEX if the hash map does not contain the key).
+    sint64 remove(const KeyT& key);
+
+    // Check if cleanup is needed based on the removal threshold, without modifying the container.
+    bool needsCleanup(uint64 removalThresholdPercent = 50) const;
+
+    // Call cleanup() if it makes sense. The content of this object may be reordered, so prior indices are invalidated.
+    void cleanupIfNeeded(uint64 removalThresholdPercent = 50);
+
+    // Remove all elements marked for removal. This is an expensive operation, but it improves lookup performance
+    // if remove has been called often. Content is reordered, so prior indices are invalidated.
+    void cleanup();
+
+    // Reinitialize as empty hash set.
+    void reset();
 };
 
-struct LiquidityInfo
+//////////////////////////////////////////////////////////////////////////////
+    // HashSet template class
+
+template <typename KeyT, uint64 L, typename HashFunc>
+uint64 HashSet<KeyT, L, HashFunc>::_getEncodedOccupationFlags(const uint64* occupationFlags, const sint64 elementIndex) const
 {
-    sint64 liquidity;
-    uint128 feeDebtX64;
-    uint64 accumulatedFee;
-};
+    const sint64 offset = (elementIndex & 31) << 1;
+    uint64 flags = occupationFlags[elementIndex >> 5] >> offset;
+    if (offset > 0)
+    {
+        flags |= occupationFlags[((elementIndex + 32) & (L - 1)) >> 5] << (2 * _nEncodedFlags - offset);
+    }
+    return flags;
+}
 
-// Old QSWAP stored entity + liquidity per Collection element (PoV = poolID).
-struct OldLiquidityInfo
+template <typename KeyT, uint64 L, typename HashFunc>
+bool HashSet<KeyT, L, HashFunc>::contains(const KeyT& key) const
 {
-    id entity;
-    sint64 liquidity;
-};
+    return getElementIndex(key) != NULL_INDEX;
+}
 
-// Old state variables read from the contract file
-uint32 old_swapFeeRate;           // e.g. 30: 0.3% (base: 10_000)
-uint32 old_investRewardsFeeRate;  // 3: 3% of swap fees to Invest & Rewards (base: 100)
-uint32 old_shareholderFeeRate;    // 27: 27% of swap fees to SC shareholders (base: 100)
-uint32 old_poolCreationFeeRate;   // e.g. 10: 10% (base: 100)
+template <typename KeyT, uint64 L, typename HashFunc>
+sint64 HashSet<KeyT, L, HashFunc>::getElementIndex(const KeyT& key) const
+{
+    sint64 index = HashFunc::hash(key) & (L - 1);
+    for (sint64 counter = 0; counter < L; counter += 32)
+    {
+        uint64 flags = _getEncodedOccupationFlags(_occupationFlags, index);
+        for (auto i = 0; i < _nEncodedFlags; i++, flags >>= 2)
+        {
+            switch (flags & 3ULL)
+            {
+            case 0:
+                return NULL_INDEX;
+            case 1:
+                if (_keys[index] == key)
+                {
+                    return index;
+                }
+                break;
+            }
+            index = (index + 1) & (L - 1);
+        }
+    }
+    return NULL_INDEX;
+}
 
-id old_investRewardsId;
-uint64 old_investRewardsEarnedFee;
-uint64 old_investRewardsDistributedAmount;
+template <typename KeyT, uint64 L, typename HashFunc>
+inline KeyT HashSet<KeyT, L, HashFunc>::key(sint64 elementIndex) const
+{
+    return _keys[elementIndex & (L - 1)];
+}
 
-uint64 old_shareholderEarnedFee;
-uint64 old_shareholderDistributedAmount;
+template <typename KeyT, uint64 L, typename HashFunc>
+inline uint64 HashSet<KeyT, L, HashFunc>::population() const
+{
+    return _population;
+}
 
-Array<OldPoolBasicState, QSWAP_OLD_MAX_POOL> old_mPoolBasicStates;
-Collection<OldLiquidityInfo, QSWAP_OLD_MAX_POOL * QSWAP_MAX_USER_PER_POOL> old_mLiquidities;
+template <typename KeyT, uint64 L, typename HashFunc>
+sint64 HashSet<KeyT, L, HashFunc>::add(const KeyT& key)
+{
+    if (_population < capacity())
+    {
+        // search in hash map
+        sint64 markedForRemovalIndexForReuse = NULL_INDEX;
+        sint64 index = HashFunc::hash(key) & (L - 1);
+        for (sint64 counter = 0; counter < L; counter += 32)
+        {
+            uint64 flags = _getEncodedOccupationFlags(_occupationFlags, index);
+            for (auto i = 0; i < _nEncodedFlags; i++, flags >>= 2)
+            {
+                switch (flags & 3ULL)
+                {
+                case 0:
+                    // empty entry -> key isn't in set yet
+                    // If we have already seen an entry marked for removal, reuse this slot because it is closer to the hash index
+                    if (markedForRemovalIndexForReuse != NULL_INDEX)
+                        goto reuse_slot;
+                    // ... otherwise put element and mark as occupied
+                    _occupationFlags[index >> 5] |= (1ULL << ((index & 31) << 1));
+                    _keys[index] = key;
+                    _population++;
+                    return index;
+                case 1:
+                    // used entry
+                    if (_keys[index] == key)
+                    {
+                        // found key -> return index
+                        return index;
+                    }
+                    break;
+                case 2:
+                    // marked for removal -> reuse slot (first slot we see) later if we are sure that key isn't in the set
+                    if (markedForRemovalIndexForReuse == NULL_INDEX)
+                        markedForRemovalIndexForReuse = index;
+                    break;
+                }
+                index = (index + 1) & (L - 1);
+            }
+        }
 
-uint32 old_qxFeeRate;             // 5: 5% of swap fees to QX (base: 100)
-uint32 old_burnFeeRate;           // 1: 1% of swap fees burned (base: 100)
+        if (markedForRemovalIndexForReuse != NULL_INDEX)
+        {
+        reuse_slot:
+            // Reuse slot marked for removal: put key here and set flags from 2 to 1.
+            // But don't decrement _markRemovalCounter, because it is used to check if cleanup() is needed.
+            // Without cleanup, we don't get new unoccupied slots and at least lookup of keys that aren't contained in the set
+            // stays slow.
+            index = markedForRemovalIndexForReuse;
+            _occupationFlags[index >> 5] ^= (3ULL << ((index & 31) << 1));
+            _keys[index] = key;
+            _population++;
+            return index;
+        }
+    }
+    else // _population == capacity()
+    {
+        // Check if key exists.
+        sint64 index = getElementIndex(key);
+        if (index != NULL_INDEX)
+        {
+            return index;
+        }
+    }
+    return NULL_INDEX;
+}
 
-uint64 old_qxEarnedFee;
-uint64 old_qxDistributedAmount;
+template <typename KeyT, uint64 L, typename HashFunc>
+bool HashSet<KeyT, L, HashFunc>::isEmptySlot(sint64 elementIndex) const
+{
+    elementIndex &= (L - 1);
+    uint64 flags = _getEncodedOccupationFlags(_occupationFlags, elementIndex);
+    return ((flags & 3ULL) != 1);
+}
 
-uint64 old_burnEarnedFee;         // Total burn fees collected (to be burned in END_TICK)
-uint64 old_burnedAmount;          // Total amount actually burned
+template <typename KeyT, uint64 L, typename HashFunc>
+sint64 HashSet<KeyT, L, HashFunc>::nextElementIndex(sint64 elementIndex) const
+{
+    if (!_population)
+        return NULL_INDEX;
 
-uint32 old_cachedIssuanceFee;
-uint32 old_cachedTransferFee;
+    if (elementIndex < 0)
+        elementIndex = 0;
+    else
+        ++elementIndex;
 
-// Migrated state (file scope: Collection is hundreds of MB — must not live on the stack).
-Array<PoolBasicState, QSWAP_NEW_MAX_POOL> new_mPoolBasicStates;
-Collection<LiquidityInfo, QSWAP_NEW_MAX_POOL * QSWAP_MAX_USER_PER_POOL> new_mLiquidities;
+    // search for next occupied element until end of hash map array
+    constexpr uint64 flagsLength = math_lib::max(L >> 5, 1ull);
+    sint64 flagsIdx = elementIndex >> 5;
+    sint64 offset = elementIndex & 31ll;
+    uint64 flags = _occupationFlags[flagsIdx] >> (2 * offset);
+    while (flagsIdx < flagsLength)
+    {
+        for (sint64 i = offset; i < _nEncodedFlags; ++i, flags >>= 2)
+        {
+            if (!flags)
+            {
+                // no occupied entries in current flags
+                break;
+            }
+            if ((flags & 3ULL) == 1)
+            {
+                // found occupied entry
+                return (flagsIdx << 5) + i;
+            }
+        }
 
-// Binary state I/O (field order must match QSWAP::StateData on disk).
+        flags = _occupationFlags[++flagsIdx];
+        offset = 0;
+    }
+
+    return NULL_INDEX;
+}
+
+template <typename KeyT, uint64 L, typename HashFunc>
+void HashSet<KeyT, L, HashFunc>::removeByIndex(sint64 elementIdx)
+{
+    elementIdx &= (L - 1);
+    uint64 flags = _getEncodedOccupationFlags(_occupationFlags, elementIdx);
+
+    if ((flags & 3ULL) == 1)
+    {
+        _population--;
+        _markRemovalCounter++;
+        _occupationFlags[elementIdx >> 5] ^= (3ULL << ((elementIdx & 31) << 1));
+
+        const bool CLEAR_UNUSED_ELEMENT = true;
+        if (CLEAR_UNUSED_ELEMENT)
+        {
+            setMem(&_keys[elementIdx], sizeof(KeyT), 0);
+        }
+    }
+}
+
+template <typename KeyT, uint64 L, typename HashFunc>
+sint64 HashSet<KeyT, L, HashFunc>::remove(const KeyT& key)
+{
+    sint64 elementIndex = getElementIndex(key);
+    if (elementIndex == NULL_INDEX)
+    {
+        return NULL_INDEX;
+    }
+    else
+    {
+        removeByIndex(elementIndex);
+        return elementIndex;
+    }
+}
+
+template <typename KeyT, uint64 L, typename HashFunc>
+bool HashSet<KeyT, L, HashFunc>::needsCleanup(uint64 removalThresholdPercent) const
+{
+    return _markRemovalCounter > (removalThresholdPercent * L / 100);
+}
+
+template <typename KeyT, uint64 L, typename HashFunc>
+void HashSet<KeyT, L, HashFunc>::cleanupIfNeeded(uint64 removalThresholdPercent)
+{
+    if (_markRemovalCounter > (removalThresholdPercent * L / 100))
+    {
+        cleanup();
+    }
+}
+
+template <typename KeyT, uint64 L, typename HashFunc>
+void HashSet<KeyT, L, HashFunc>::cleanup()
+{
+    // _keys gets occupied over time with entries of type 3 which means they are marked for cleanup.
+    // Once cleanup is called it's necessary to remove all these type 3 entries by reconstructing a fresh hash map residing in scratchpad buffer.
+    // Cleanup() called for a hash map having only type 3 entries must give the result equal to reset() memory content wise.
+
+    // If no elements have been removed, no cleanup is needed
+    if (!_markRemovalCounter)
+    {
+        return;
+    }
+
+    // Speedup case of empty hash map with elements marked for removal
+    if (!population())
+    {
+        reset();
+        return;
+    }
+
+    // Init buffers
+    __ScopedScratchpad scratchpad(sizeof(_keys) + sizeof(_occupationFlags), /*initZero=*/true);
+    ASSERT(scratchpad.ptr);
+    auto* _keyBuffer = reinterpret_cast<KeyT*>(scratchpad.ptr);
+    auto* _occupationFlagsBuffer = reinterpret_cast<uint64*>(_keyBuffer + L);
+    auto* _stackBuffer = reinterpret_cast<sint64*>(
+        _occupationFlagsBuffer + sizeof(_occupationFlags) / sizeof(_occupationFlags[0]));
+    uint64 newPopulation = 0;
+
+    // Go through hash map. For each element that is occupied but not marked for removal, insert element in new hash map's buffers.
+    constexpr uint64 oldIndexGroupCount = (L >> 5) ? (L >> 5) : 1;
+    for (sint64 oldIndexGroup = 0; oldIndexGroup < oldIndexGroupCount; oldIndexGroup++)
+    {
+        const uint64 flags = _occupationFlags[oldIndexGroup];
+        uint64 maskBits = (0xAAAAAAAAAAAAAAAA & (flags << 1));
+        maskBits &= maskBits ^ (flags & 0xAAAAAAAAAAAAAAAA);
+        sint64 oldIndexOffset = _tzcnt_u64(maskBits) & 0xFE;
+        const sint64 oldIndexOffsetEnd = 64 - (_lzcnt_u64(maskBits) & 0xFE);
+        for (maskBits >>= oldIndexOffset;
+            oldIndexOffset < oldIndexOffsetEnd; oldIndexOffset += 2, maskBits >>= 2)
+        {
+            // Only add elements to new hash map that are occupied and not marked for removal
+            if (maskBits & 3ULL)
+            {
+                // find empty position in new hash map
+                const sint64 oldIndex = (oldIndexGroup << 5) + (oldIndexOffset >> 1);
+                sint64 newIndex = HashFunc::hash(_keys[oldIndex]) & (L - 1);
+                for (sint64 counter = 0; counter < L; counter += 32)
+                {
+                    QPI::uint64 newFlags = _getEncodedOccupationFlags(_occupationFlagsBuffer, newIndex);
+                    for (sint64 i = 0; i < _nEncodedFlags; i++, newFlags >>= 2)
+                    {
+                        if ((newFlags & 3ULL) == 0)
+                        {
+                            newIndex = (newIndex + i) & (L - 1);
+                            goto foundEmptyPosition;
+                        }
+                    }
+                    newIndex = (newIndex + _nEncodedFlags) & (L - 1);
+                }
+#ifdef NO_UEFI
+                // should never be reached, because old and new map have same capacity (there should always be an empty slot)
+                goto cleanupBug;
+#endif
+
+            foundEmptyPosition:
+                // occupy empty hash map entry
+                _occupationFlagsBuffer[newIndex >> 5] |= (1ULL << ((newIndex & 31) << 1));
+                _keyBuffer[newIndex] = _keys[oldIndex];
+
+                // check if we are done
+                newPopulation += 1;
+                if (newPopulation == _population)
+                {
+                    // all elements have been transferred -> overwrite old array with new array
+                    copyMem(_keys, _keyBuffer, sizeof(_keys));
+                    copyMem(_occupationFlags, _occupationFlagsBuffer, sizeof(_occupationFlags));
+                    _markRemovalCounter = 0;
+                    return;
+                }
+            }
+        }
+    }
+
+#ifdef NO_UEFI
+    cleanupBug :
+    // don't expect here, certainly got error!!!
+    printf("ERROR: Something went wrong at cleanup!\n");
+#endif
+}
+
+template <typename KeyT, uint64 L, typename HashFunc>
+void HashSet<KeyT, L, HashFunc>::reset()
+{
+    setMem(this, sizeof(*this), 0);
+}
+
 #define READ_STATE(stream, value) \
     do { \
         (stream).read(reinterpret_cast<char*>(&(value)), sizeof(value)); \
@@ -1511,7 +2304,74 @@ Collection<LiquidityInfo, QSWAP_NEW_MAX_POOL * QSWAP_MAX_USER_PER_POOL> new_mLiq
         } \
     } while (0)
 
-// Read old state from the contract file (field order matches QSWAP::StateData)
+static bool isZeroId(const id& value)
+{
+    return value == id::zero();
+}
+
+// OLD QBOND STATE
+
+constexpr uint64 QBOND_MAX_EPOCH_COUNT = 1024ULL;
+
+struct StakeEntry
+{
+    id staker;
+    sint64 amount;
+};
+
+struct MBondInfo
+{
+    uint64 name;
+    sint64 stakersAmount;
+    sint64 totalStaked;
+};
+
+struct OldOrder
+{
+    id owner;
+    sint64 epoch;
+    sint64 numberOfMBonds;
+};
+
+struct NewOrder
+{
+    id owner;
+    sint64 epoch;
+    sint64 numberOfMBonds;
+    sint64 feeDebt;
+};
+
+struct _NumberOfReservedMBonds_input
+{
+    id owner;
+    sint64 epoch;
+};
+
+struct _NumberOfReservedMBonds_output
+{
+    sint64 amount;
+};
+
+Array<StakeEntry, 16> fold_stakeQueue;
+HashMap<uint16, MBondInfo, QBOND_MAX_EPOCH_COUNT> fold_epochMbondInfoMap;
+HashMap<id, sint64, 524288> fold_userTotalStakedMap;
+HashSet<id, 1024> fold_commissionFreeAddresses;
+uint64 fold_qearnIncomeAmount;
+uint64 fold_totalEarnedAmount;
+uint64 fold_earnedAmountFromTrade;
+uint64 fold_distributedAmount;
+id fold_adminAddress;
+id fold_devAddress;
+Collection<OldOrder, 1048576> fold_askOrders;
+Collection<OldOrder, 1048576> fold_bidOrders;
+uint8 fold_cyclicMbondCounter;
+_NumberOfReservedMBonds_input fold_numberOfReservedMBonds_input;
+_NumberOfReservedMBonds_output fold_numberOfReservedMBonds_output;
+
+// new data
+Collection<NewOrder, 1048576> new_askOrders;
+Collection<NewOrder, 1048576> new_bidOrders;
+
 void readOldState(const std::string& filename)
 {
     std::ifstream infile(filename, std::ios::binary);
@@ -1520,240 +2380,80 @@ void readOldState(const std::string& filename)
         throw std::runtime_error("Failed to open the old state file: " + filename);
     }
 
-    READ_STATE(infile, old_swapFeeRate);
-    READ_STATE(infile, old_investRewardsFeeRate);
-    READ_STATE(infile, old_shareholderFeeRate);
-    READ_STATE(infile, old_poolCreationFeeRate);
+    READ_STATE(infile, fold_stakeQueue);
+    READ_STATE(infile, fold_epochMbondInfoMap);
+    READ_STATE(infile, fold_userTotalStakedMap);
+    READ_STATE(infile, fold_commissionFreeAddresses);
 
-    READ_STATE(infile, old_investRewardsId);
-    READ_STATE(infile, old_investRewardsEarnedFee);
-    READ_STATE(infile, old_investRewardsDistributedAmount);
+    READ_STATE(infile, fold_qearnIncomeAmount);
+    READ_STATE(infile, fold_totalEarnedAmount);
+    READ_STATE(infile, fold_earnedAmountFromTrade);
 
-    READ_STATE(infile, old_shareholderEarnedFee);
-    READ_STATE(infile, old_shareholderDistributedAmount);
+    READ_STATE(infile, fold_distributedAmount);
+    READ_STATE(infile, fold_adminAddress);
 
-    READ_STATE(infile, old_mPoolBasicStates);
-    READ_STATE(infile, old_mLiquidities);
+    READ_STATE(infile, fold_devAddress);
+    READ_STATE(infile, fold_askOrders);
 
-    READ_STATE(infile, old_qxFeeRate);
-    READ_STATE(infile, old_burnFeeRate);
+    READ_STATE(infile, fold_bidOrders);
+    READ_STATE(infile, fold_cyclicMbondCounter);
 
-    READ_STATE(infile, old_qxEarnedFee);
-    READ_STATE(infile, old_qxDistributedAmount);
-
-    READ_STATE(infile, old_burnEarnedFee);
-    READ_STATE(infile, old_burnedAmount);
-
-    READ_STATE(infile, old_cachedIssuanceFee);
-    READ_STATE(infile, old_cachedTransferFee);
+    READ_STATE(infile, fold_numberOfReservedMBonds_input);
+    READ_STATE(infile, fold_numberOfReservedMBonds_output);
 
     infile.close();
 }
 
-static bool isZeroId(const id& value)
+void readNewState(const std::string& filename)
 {
-    return value == id::zero();
+    std::ifstream infile(filename, std::ios::binary);
+    if (!infile)
+    {
+        throw std::runtime_error("Failed to open the old state file: " + filename);
+    }
+
+    READ_STATE(infile, fold_epochMbondInfoMap);
+    READ_STATE(infile, fold_userTotalStakedMap);
+    READ_STATE(infile, fold_commissionFreeAddresses);
+
+    READ_STATE(infile, fold_qearnIncomeAmount);
+    READ_STATE(infile, fold_totalEarnedAmount);
+    READ_STATE(infile, fold_earnedAmountFromTrade);
+
+    READ_STATE(infile, fold_distributedAmount);
+    READ_STATE(infile, fold_adminAddress);
+
+    READ_STATE(infile, fold_devAddress);
+    READ_STATE(infile, new_askOrders);
+    READ_STATE(infile, new_bidOrders);
+    READ_STATE(infile, fold_cyclicMbondCounter);
+
+    infile.close();
 }
 
-static void writeCsvEscaped(std::ostream& out, const std::string& field)
+static void migrateOrders(Collection<OldOrder, 1048576>& old_orders, Collection<NewOrder, 1048576>& new_orders)
 {
-    bool needQuotes = false;
-    for (const char c : field)
+    new_orders.reset();
+    NewOrder newOrder{};
+
+    for (uint64 elementIndex = 0; elementIndex < 1048576; ++elementIndex)
     {
-        if (c == ',' || c == '"' || c == '\n' || c == '\r')
-        {
-            needQuotes = true;
-            break;
-        }
-    }
-    if (!needQuotes)
-    {
-        out << field;
-        return;
-    }
-    out << '"';
-    for (const char c : field)
-    {
-        if (c == '"')
-        {
-            out << "\"\"";
-        }
-        else
-        {
-            out << c;
-        }
-    }
-    out << '"';
-}
-
-// CSV files open directly in Excel for manual verification of the loaded old state.
-static void exportOldStateToCsv(const std::string& oldStateFile)
-{
-    const std::string scalarsPath = oldStateFile + "_scalars.csv";
-    const std::string poolsPath = oldStateFile + "_pools.csv";
-    const std::string liquiditiesPath = oldStateFile + "_liquidities.csv";
-
-    {
-        std::ofstream out(scalarsPath);
-        if (!out)
-        {
-            throw std::runtime_error("Failed to create " + scalarsPath);
-        }
-        out << "field,value\n";
-        out << "swapFeeRate," << old_swapFeeRate << "\n";
-        out << "investRewardsFeeRate," << old_investRewardsFeeRate << "\n";
-        out << "shareholderFeeRate," << old_shareholderFeeRate << "\n";
-        out << "poolCreationFeeRate," << old_poolCreationFeeRate << "\n";
-        out << "investRewardsId," << test_utils::idToIdentity(old_investRewardsId) << "\n";
-        out << "investRewardsEarnedFee," << old_investRewardsEarnedFee << "\n";
-        out << "investRewardsDistributedAmount," << old_investRewardsDistributedAmount << "\n";
-        out << "shareholderEarnedFee," << old_shareholderEarnedFee << "\n";
-        out << "shareholderDistributedAmount," << old_shareholderDistributedAmount << "\n";
-        out << "mPoolBasicStates.capacity," << QSWAP_OLD_MAX_POOL << "\n";
-        out << "mLiquidities.capacity," << old_mLiquidities.capacity() << "\n";
-        out << "mLiquidities.population," << old_mLiquidities.population() << "\n";
-        out << "qxFeeRate," << old_qxFeeRate << "\n";
-        out << "burnFeeRate," << old_burnFeeRate << "\n";
-        out << "qxEarnedFee," << old_qxEarnedFee << "\n";
-        out << "qxDistributedAmount," << old_qxDistributedAmount << "\n";
-        out << "burnEarnedFee," << old_burnEarnedFee << "\n";
-        out << "burnedAmount," << old_burnedAmount << "\n";
-        out << "cachedIssuanceFee," << old_cachedIssuanceFee << "\n";
-        out << "cachedTransferFee," << old_cachedTransferFee << "\n";
-    }
-
-    {
-        std::ofstream out(poolsPath);
-        if (!out)
-        {
-            throw std::runtime_error("Failed to create " + poolsPath);
-        }
-        out << "pool_slot,pool_id,reserved_qu_amount,reserved_asset_amount,total_liquidity,active\n";
-        for (uint64 slot = 0; slot < QSWAP_OLD_MAX_POOL; ++slot)
-        {
-            const OldPoolBasicState& pool = old_mPoolBasicStates.get(slot);
-            const bool active = !isZeroId(pool.poolID);
-            out << slot << ',';
-            writeCsvEscaped(out, test_utils::idToIdentity(pool.poolID));
-            out << ',' << pool.reservedQuAmount << ',' << pool.reservedAssetAmount << ','
-                << pool.totalLiquidity << ',' << (active ? 1 : 0) << '\n';
-        }
-    }
-
-    uint64 liquidityRows = 0;
-    {
-        std::ofstream out(liquiditiesPath);
-        if (!out)
-        {
-            throw std::runtime_error("Failed to create " + liquiditiesPath);
-        }
-        out << "pool_slot,pool_id,entity_id,liquidity\n";
-        for (uint64 slot = 0; slot < QSWAP_OLD_MAX_POOL; ++slot)
-        {
-            const OldPoolBasicState& pool = old_mPoolBasicStates.get(slot);
-            if (isZeroId(pool.poolID))
-            {
-                continue;
-            }
-
-            const id& poolID = pool.poolID;
-            sint64 elementIndex = old_mLiquidities.headIndex(poolID, 0);
-            while (elementIndex != NULL_INDEX)
-            {
-                const OldLiquidityInfo& entry = old_mLiquidities.element(elementIndex);
-                if (entry.liquidity != 0)
-                {
-                    out << slot << ',';
-                    writeCsvEscaped(out, test_utils::idToIdentity(poolID));
-                    out << ',';
-                    writeCsvEscaped(out, test_utils::idToIdentity(entry.entity));
-                    out << ',' << entry.liquidity << '\n';
-                    ++liquidityRows;
-                }
-                elementIndex = old_mLiquidities.nextElementIndex(elementIndex);
-            }
-        }
-    }
-
-    std::cout << "Exported old state for Excel review:" << std::endl;
-    std::cout << "  " << scalarsPath << std::endl;
-    std::cout << "  " << poolsPath << " (" << QSWAP_OLD_MAX_POOL << " pool slots)" << std::endl;
-    std::cout << "  " << liquiditiesPath << " (" << liquidityRows << " liquidity rows)" << std::endl;
-}
-
-// New QSWAP: one Collection PoV per (pool, LP). Old QSWAP used poolID alone as PoV.
-inline id liquidityPov(const id& poolID, const id& entity, id& r)
-{
-    r = entity;
-    r.u64._0 ^= poolID.u64._0;
-    r.u64._1 ^= poolID.u64._1;
-    r.u64._2 ^= poolID.u64._2;
-    r.u64._3 ^= poolID.u64._3;
-    return r;
-}
-
-// Rebuild mLiquidities: old PoV = poolID with {entity, liquidity}; new PoV = poolID ^ entity, LiquidityInfo per LP.
-static void migrateLiquidities(
-    Collection<LiquidityInfo, QSWAP_NEW_MAX_POOL * QSWAP_MAX_USER_PER_POOL>& new_mLiquidities)
-{
-    new_mLiquidities.reset();
-
-    for (uint64 poolSlot = 0; poolSlot < QSWAP_NEW_MAX_POOL; ++poolSlot)
-    {
-        const OldPoolBasicState& pool = old_mPoolBasicStates.get(poolSlot);
-        if (isZeroId(pool.poolID))
+        if (isZeroId(old_orders.pov(elementIndex)))
         {
             continue;
         }
 
-        const id& poolID = pool.poolID;
-        sint64 elementIndex = old_mLiquidities.headIndex(poolID, 0);
-        while (elementIndex != NULL_INDEX)
-        {
-            const OldLiquidityInfo& oldEntry = old_mLiquidities.element(elementIndex);
+        newOrder.epoch = old_orders.element(elementIndex).epoch;
+        newOrder.numberOfMBonds = old_orders.element(elementIndex).numberOfMBonds;
+        newOrder.owner = old_orders.element(elementIndex).owner;
+        newOrder.feeDebt = 0;
 
-            if (oldEntry.liquidity != 0)
-            {
-                id povScratch;
-                const id newPov = liquidityPov(poolID, oldEntry.entity, povScratch);
-
-                LiquidityInfo newEntry;
-                newEntry.liquidity = oldEntry.liquidity;
-                newEntry.feeDebtX64 = uint128();
-                newEntry.accumulatedFee = 0;
-
-                // Priority is unused when each PoV has a single element (same as live QSWAP: add(..., 0)).
-                if (new_mLiquidities.add(newPov, newEntry, 0) == NULL_INDEX)
-                {
-                    throw std::runtime_error(
-                        "Failed to migrate liquidity: new collection is full "
-                        "(pool slot " + std::to_string(poolSlot) + ").");
-                }
-            }
-
-            elementIndex = old_mLiquidities.nextElementIndex(elementIndex);
-        }
+        new_orders.add(old_orders.pov(elementIndex), newOrder, old_orders.priority(elementIndex));
     }
 }
 
-// Write migrated state to a file
 void writeNewState(const std::string& filename)
 {
-    for (uint64 i = 0; i < QSWAP_NEW_MAX_POOL; ++i)
-    {
-        const OldPoolBasicState& oldPool = old_mPoolBasicStates.get(i);
-        PoolBasicState newPool;
-        newPool.poolID = oldPool.poolID;
-        newPool.reservedQuAmount = oldPool.reservedQuAmount;
-        newPool.reservedAssetAmount = oldPool.reservedAssetAmount;
-        newPool.totalLiquidity = oldPool.totalLiquidity;
-        newPool.accFeePerLPX64 = uint128();
-        new_mPoolBasicStates.set(i, newPool);
-    }
-
-    std::cout << "Migrating liquidities..." << std::endl;
-    std::cout.flush();
-    migrateLiquidities(new_mLiquidities);
     std::cout << "Writing " << filename << "..." << std::endl;
     std::cout.flush();
 
@@ -1763,46 +2463,139 @@ void writeNewState(const std::string& filename)
         throw std::runtime_error("Failed to open the new state file: " + filename);
     }
 
-    WRITE_STATE(outfile, old_swapFeeRate);
-    WRITE_STATE(outfile, old_investRewardsFeeRate);
-    WRITE_STATE(outfile, old_shareholderFeeRate);
-    WRITE_STATE(outfile, old_poolCreationFeeRate);
+    WRITE_STATE(outfile, fold_epochMbondInfoMap);
+    WRITE_STATE(outfile, fold_userTotalStakedMap);
+    WRITE_STATE(outfile, fold_commissionFreeAddresses);
 
-    WRITE_STATE(outfile, old_investRewardsId);
-    WRITE_STATE(outfile, old_investRewardsEarnedFee);
-    WRITE_STATE(outfile, old_investRewardsDistributedAmount);
+    WRITE_STATE(outfile, fold_qearnIncomeAmount);
+    WRITE_STATE(outfile, fold_totalEarnedAmount);
+    WRITE_STATE(outfile, fold_earnedAmountFromTrade);
+    WRITE_STATE(outfile, fold_distributedAmount);
+    WRITE_STATE(outfile, fold_adminAddress);
+    WRITE_STATE(outfile, fold_devAddress);
 
-    WRITE_STATE(outfile, old_shareholderEarnedFee);
-    WRITE_STATE(outfile, old_shareholderDistributedAmount);
+    WRITE_STATE(outfile, new_askOrders);
+    WRITE_STATE(outfile, new_bidOrders);
 
-    WRITE_STATE(outfile, new_mPoolBasicStates);
-    WRITE_STATE(outfile, new_mLiquidities);
-
-    WRITE_STATE(outfile, old_qxFeeRate);
-    WRITE_STATE(outfile, old_burnFeeRate);
-
-    WRITE_STATE(outfile, old_qxEarnedFee);
-    WRITE_STATE(outfile, old_qxDistributedAmount);
-
-    WRITE_STATE(outfile, old_burnEarnedFee);
-    WRITE_STATE(outfile, old_burnedAmount);
-
-    WRITE_STATE(outfile, old_cachedIssuanceFee);
-    WRITE_STATE(outfile, old_cachedTransferFee);
+    uint64 new_cyclicMbondCounter = fold_cyclicMbondCounter;
+    WRITE_STATE(outfile, new_cyclicMbondCounter);
 
     outfile.close();
+}
+
+static void exportOldStateToCsv(const std::string& oldStateFile)
+{
+    const std::string scalarsPath = oldStateFile + "_scalars.csv";
+    const std::string mbondsPath = oldStateFile + "_mbonds.csv";
+    const std::string usersStatsPath = oldStateFile + "_user_stats.csv";
+    const std::string askOrdersPath = oldStateFile + "_ask_orders.csv";
+    const std::string bidOrdersPath = oldStateFile + "_bid_orders.csv";
+
+    {
+        std::ofstream out(scalarsPath);
+        if (!out)
+        {
+            throw std::runtime_error("Failed to create " + scalarsPath);
+        }
+        out << "field,value\n";
+        out << "totalEarnedAmount," << fold_totalEarnedAmount << "\n";
+        out << "earnedAmountFromTrade," << fold_earnedAmountFromTrade << "\n";
+        out << "distributedAmount," << fold_distributedAmount << "\n";
+        out << "devAddress," << test_utils::idToIdentity(fold_devAddress) << "\n";
+        out << "adminAddress," << test_utils::idToIdentity(fold_adminAddress) << "\n";
+        out << "cyclicMbondCounter," << static_cast<unsigned>(fold_cyclicMbondCounter) << "\n";
+    }
+
+    {
+        std::ofstream out(mbondsPath);
+        if (!out)
+        {
+            throw std::runtime_error("Failed to create " + mbondsPath);
+        }
+        out << "epoch,name,stakers_amount,total_staked\n";
+        for (uint64 elementIndex = 0; elementIndex < QBOND_MAX_EPOCH_COUNT; ++elementIndex)
+        {
+            const uint16 epoch = fold_epochMbondInfoMap.key(elementIndex);
+            const MBondInfo& mbondInfo = fold_epochMbondInfoMap.value(elementIndex);
+            char assetName[8] = { '_', 0 };
+            if (mbondInfo.name)
+            {
+                memcpy(assetName, &mbondInfo.name, 8);
+            }
+            out << elementIndex << ',' << epoch << ',' << assetName << ',' << mbondInfo.stakersAmount << ',' << mbondInfo.totalStaked << '\n';
+        }
+    }
+
+    {
+        std::ofstream out(usersStatsPath);
+        if (!out)
+        {
+            throw std::runtime_error("Failed to create " + usersStatsPath);
+        }
+        out << "index,id,total_staked\n";
+        for (uint64 elementIndex = 0; elementIndex < 524288; ++elementIndex)
+        {
+            sint64 totalStaked = fold_userTotalStakedMap.value(elementIndex);
+            if (totalStaked)
+            {
+                out << elementIndex << ',' << totalStaked << ',' << test_utils::idToIdentity(fold_userTotalStakedMap.key(elementIndex)) << '\n';
+            }
+        }
+    }
+
+    {
+        std::ofstream out(askOrdersPath);
+        if (!out)
+        {
+            throw std::runtime_error("Failed to create " + askOrdersPath);
+        }
+        out << "index,priority,epoch,numberOfMbonds,owner\n";
+        for (uint64 elementIndex = 0; elementIndex < 1048576; ++elementIndex)
+        {
+            if (isZeroId(fold_askOrders.pov(elementIndex)))
+            {
+                continue;
+            }
+            OldOrder oldOrder = fold_askOrders.element(elementIndex);
+            NewOrder newOrder = new_askOrders.element(elementIndex);
+            out << elementIndex << ',' << fold_askOrders.priority(elementIndex) << ',' << oldOrder.epoch << ',' << oldOrder.numberOfMBonds << ',' << test_utils::idToIdentity(oldOrder.owner)
+                << "      " << new_askOrders.priority(elementIndex) << ',' << newOrder.epoch << ',' << newOrder.numberOfMBonds << ',' << test_utils::idToIdentity(newOrder.owner) << '\n';
+        }
+    }
+
+    {
+        std::ofstream out(bidOrdersPath);
+        if (!out)
+        {
+            throw std::runtime_error("Failed to create " + bidOrdersPath);
+        }
+        out << "index,priority,epoch,numberOfMbonds,owner\n";
+        for (uint64 elementIndex = 0; elementIndex < 1048576; ++elementIndex)
+        {
+            if (isZeroId(fold_bidOrders.pov(elementIndex)))
+            {
+                continue;
+            }
+            OldOrder oldOrder = fold_bidOrders.element(elementIndex);
+            NewOrder newOrder = new_bidOrders.element(elementIndex);
+            out << elementIndex << ',' << fold_bidOrders.priority(elementIndex) << ',' << oldOrder.epoch << ',' << oldOrder.numberOfMBonds << ',' << test_utils::idToIdentity(oldOrder.owner)
+                << "      " << new_bidOrders.priority(elementIndex) << ',' << newOrder.epoch << ',' << newOrder.numberOfMBonds << ',' << test_utils::idToIdentity(newOrder.owner) << '\n';
+        }
+    }
 }
 
 int main()
 {
     try
     {
-        const std::string oldStateFile = "contract0013.215";
-        const std::string newStateFile = "contract0013.215.new";
+        const std::string oldStateFile = "contract0017.217";
+        const std::string newStateFile = "contract0017.217.new";
 
         std::cout << "Reading " << oldStateFile << "..." << std::endl;
         std::cout.flush();
         readOldState(oldStateFile);
+        migrateOrders(fold_askOrders, new_askOrders);
+        migrateOrders(fold_bidOrders, new_bidOrders);
 
         exportOldStateToCsv(oldStateFile);
 

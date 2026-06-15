@@ -1,4 +1,4 @@
-This is the migration tool to convert only the state file of Qswap SC.
+This is the migration tool to convert only the state file of QBond SC.
 
 ## How to build and run
 
@@ -29,8 +29,8 @@ cmake --build . --config Release
 
 The CPU must support **AVX2**, **BMI**, and **LZCNT** (these are enabled automatically for GCC/Clang).
 
-Place `contract0013.215` in the working directory before running the tool. It writes `contract0013.215.new` and optional CSV exports alongside the input file.
+Place `contract0017.217` in the working directory before running the tool. It writes `contract0017.217.new` and optional CSV exports alongside the input file.
 
 ### After migration
 
-Check the timestamp and size of the output state file (`contract0013.215.new`).
+Check the timestamp and size of the output state file (`contract0017.217.new`).
