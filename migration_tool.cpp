@@ -2588,8 +2588,8 @@ int main()
 {
     try
     {
-        const std::string oldStateFile = "contract0017.217";
-        const std::string newStateFile = "contract0017.217.new";
+        const std::string oldStateFile = "contract0017.218";
+        const std::string newStateFile = "contract0017.218.new";
 
         std::cout << "Reading " << oldStateFile << "..." << std::endl;
         std::cout.flush();
