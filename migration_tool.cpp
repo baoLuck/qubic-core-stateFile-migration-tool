@@ -1698,7 +1698,7 @@ sint64 HashMap<KeyT, ValueT, L, HashFunc>::nextElementIndex(sint64 elementIndex)
         ++elementIndex;
 
     // search for next occupied element until end of hash map array
-    constexpr uint64 flagsLength = math_lib::max(L >> 5, 1ull);
+    constexpr uint64 flagsLength = (L >> 5) ? (L >> 5) : 1;
     sint64 flagsIdx = elementIndex >> 5;
     sint64 offset = elementIndex & 31ll;
     uint64 flags = _occupationFlags[flagsIdx] >> (2 * offset);
@@ -2114,7 +2114,7 @@ sint64 HashSet<KeyT, L, HashFunc>::nextElementIndex(sint64 elementIndex) const
         ++elementIndex;
 
     // search for next occupied element until end of hash map array
-    constexpr uint64 flagsLength = math_lib::max(L >> 5, 1ull);
+    constexpr uint64 flagsLength = (L >> 5) ? (L >> 5) : 1;
     sint64 flagsIdx = elementIndex >> 5;
     sint64 offset = elementIndex & 31ll;
     uint64 flags = _occupationFlags[flagsIdx] >> (2 * offset);
