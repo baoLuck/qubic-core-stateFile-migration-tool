@@ -29,8 +29,8 @@ cmake --build . --config Release
 
 The CPU must support **AVX2**, **BMI**, and **LZCNT** (these are enabled automatically for GCC/Clang).
 
-Place `contract0017.217` in the working directory before running the tool. It writes `contract0017.217.new` and optional CSV exports alongside the input file.
+Place `contract0017.218` in the working directory before running the tool. It writes `contract0017.218.new` and optional CSV exports alongside the input file.
 
 ### After migration
 
-Check the timestamp and size of the output state file (`contract0017.217.new`).
+Check the timestamp and size of the output state file (`contract0017.218.new`).
